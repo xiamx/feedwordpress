@@ -595,6 +595,11 @@ class SyndicatedPost {
 	function excerpt () {
 		# Identify and sanitize excerpt: atom:summary, or rss:description
 		$excerpt = $this->entry->get_description();
+
+		# Mengxuan Xia (xiamx2004@gmail.com) 
+		# dirty hack, remove custom excerpt settings, insist on using
+		# the content to generate excerpt.
+		$excerpt = "";
 			
 		# Many RSS feeds use rss:description, inadvisably, to
 		# carry the entire post (typically with escaped HTML).
