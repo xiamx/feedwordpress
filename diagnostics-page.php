@@ -28,7 +28,7 @@ class FeedWordPressDiagnosticsPage extends FeedWordPressAdminPage {
 	
 		if (strtoupper($_SERVER['REQUEST_METHOD'])=='POST') :
 			$this->accept_POST($fwp_post);
-			do_action('feedwordpress_admin_page_diagnostics_save', $GLOBALS['fwp_post'], $this);
+			do_action('feedwordpress_admin_page_diagnostics_save', $fwp_post, $this);
 		endif;
 
 		////////////////////////////////////////////////
@@ -119,6 +119,7 @@ class FeedWordPressDiagnosticsPage extends FeedWordPressAdminPage {
 
 	function info_box ($page, $box = NULL) {
 		global $feedwordpress;
+		global $wp_version;
 		$link_category_id = FeedWordPress::link_category_id();
 	?>
 		<table class="edit-form narrow">
@@ -133,6 +134,20 @@ class FeedWordPressDiagnosticsPage extends FeedWordPressAdminPage {
 		<td>You are using FeedWordPress version <strong><?php print FEEDWORDPRESS_VERSION; ?></strong>.</td>
 		</tr>
 
+		<tr>
+		<th scope="row">Hosting Environment:</th>
+		<td><ul style="margin-top: 0; padding-top: 0;">
+		<li><em>WordPress:</em> version <?php print $wp_version; ?></li>
+		<?php if (function_exists('phpversion')) : ?>
+		<li><em>PHP:</em> version <?php print phpversion(); ?></li>
+		<?php endif; ?>
+		<?php if (function_exists('apache_get_version')) : ?>
+		<li><sem>Web Server:</em> <?php print apache_get_version(); ?></li>
+		<?php endif; ?>
+		</ul>
+		</td>
+		</tr>
+		
 		<tr>
 		<th scope="row">Link Category:</th>
 		<td><?php if (!is_wp_error($link_category_id)) :
@@ -261,11 +276,13 @@ testing but absolutely inappropriate for a production server.</p>
 			'Syndicated Post Details' => array(
 				'feed_items:freshness' => 'as FeedWordPress decides whether to treat an item as a new post, an update, or a duplicate of an existing post',
 				'feed_items:rejected' => 'when FeedWordPress rejects a post without syndicating it',
+				'syndicated_posts:categories' => 'as categories, tags, and other terms are added on the post',
 				'syndicated_posts:meta_data' => 'as syndication meta-data is added on the post',
 			),
 			'Advanced Diagnostics' => array(
 				'feed_items:freshness:reasons' => 'explaining the reason that a post was treated as an update to an existing post',
 				'feed_items:freshness:sql' => 'when FeedWordPress issues the SQL query it uses to decide whether to treat items as new, updates, or duplicates', 
+				'syndicated_posts:categories:test' => 'as FeedWordPress checks for the familiarity of feed categories and tags',
 				'syndicated_posts:static_meta_data' => 'providing meta-data about syndicated posts in the Edit Posts interface',
 			),
 		), $page);
